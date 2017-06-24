@@ -1,9 +1,8 @@
 package com.messenger.service;
 
+import com.messenger.database.DatabaseMock;
+import com.messenger.database.MessagesSource;
 import com.messenger.model.Message;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -12,12 +11,33 @@ import java.util.List;
  */
 public class MessageService {
 
+    private final MessagesSource messagesSource;
+
+    public MessageService(){
+        messagesSource = new DatabaseMock();
+    }
+    
     public List<Message> getAllMessages() {
+        return messagesSource.getMessages();
+    }
 
-        Message m1 = Message.of(1L, "Mitra", LocalDate.now(), "Hello");
-        Message m2 = Message.of(2L, "Jim", LocalDate.now(), "Konichua");
+    public Message getMessage(Long id) {
+        return messagesSource.getMessage(id);
+    }
 
-        return new ArrayList<>(Arrays.asList(m1, m2));
+    public Message addMessage(Message message) {
+        return messagesSource.addMessage(message);
+    }
+
+    public Message updateMessage(Message message) {
+        if (message.getId() < 0) {
+            throw new IllegalArgumentException("The Message ID is invalid");
+        }
+        return messagesSource.updateMessage(message);
+    }
+    
+    public Message removeMessage(Long id){
+        return messagesSource.removeMessage(id);
     }
 
 }
